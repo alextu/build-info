@@ -53,6 +53,7 @@ import java.util.Set;
  */
 public abstract class BuildInfoBaseTask extends DefaultTask {
     public static final String BUILD_INFO_TASK_NAME = "artifactoryPublish";
+    public static final String HASHING_INPUTS_TASK_NAME = "hashingInputs";
     public static final String PUBLISH_ARTIFACTS = "publishArtifacts";
     public static final String PUBLISH_BUILD_INFO = "publishBuildInfo";
     public static final String PUBLISH_IVY = "publishIvy";

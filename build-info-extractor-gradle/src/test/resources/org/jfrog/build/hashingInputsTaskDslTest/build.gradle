@@ -1,0 +1,31 @@
+hashingInputs {
+
+    tasksName = ['compileJava', 'processResources']
+
+}
+
+//
+//hashTaskInputs {
+//
+//    javaTasks()
+////    javaCompile {
+////
+////    }
+////
+////    processResources {
+////
+////    }
+////
+////    jar {
+////
+////    }
+//
+//    myCustomTask {
+//
+//        restore { artifact ->
+//
+//        }
+//
+//    }
+//
+//}

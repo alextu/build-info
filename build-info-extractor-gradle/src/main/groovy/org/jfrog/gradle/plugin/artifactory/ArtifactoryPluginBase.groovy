@@ -21,10 +21,12 @@ import org.gradle.api.Project
 import org.jfrog.gradle.plugin.artifactory.dsl.ArtifactoryPluginConvention
 import org.jfrog.gradle.plugin.artifactory.extractor.listener.ProjectsEvaluatedBuildListener
 import org.jfrog.gradle.plugin.artifactory.task.BuildInfoBaseTask
+import org.jfrog.gradle.plugin.artifactory.task.hashing.HashingInputsTask
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import static org.jfrog.gradle.plugin.artifactory.task.BuildInfoBaseTask.BUILD_INFO_TASK_NAME
+import static org.jfrog.gradle.plugin.artifactory.task.BuildInfoBaseTask.HASHING_INPUTS_TASK_NAME
 
 abstract class ArtifactoryPluginBase implements Plugin<Project> {
     private static final Logger log = LoggerFactory.getLogger(ArtifactoryPluginBase.class)
@@ -39,6 +41,7 @@ abstract class ArtifactoryPluginBase implements Plugin<Project> {
         ArtifactoryPluginConvention conv = getArtifactoryPluginConvention(project)
         // Then add the build info task
         addArtifactoryPublishTask(project)
+        addHashingInputsTask(project)
         if (!conv.clientConfig.info.buildStarted) {
             conv.clientConfig.info.setBuildStarted(System.currentTimeMillis())
         }
@@ -55,6 +58,7 @@ abstract class ArtifactoryPluginBase implements Plugin<Project> {
 
     protected abstract BuildInfoBaseTask createArtifactoryPublishTask(Project project)
     protected abstract ArtifactoryPluginConvention createArtifactoryPluginConvention(Project project)
+    protected abstract HashingInputsTask createHashingInputsTask(Project project)
 
     /**
     *  Set the plugin convention closure object
@@ -82,5 +86,17 @@ abstract class ArtifactoryPluginBase implements Plugin<Project> {
         }
         buildInfo
     }
+
+    private HashingInputsTask addHashingInputsTask(Project project) {
+        HashingInputsTask inputsTask = project.tasks.findByName(HASHING_INPUTS_TASK_NAME)
+        if (!inputsTask) {
+            def isRoot = project.equals(project.getRootProject())
+            log.debug("Configuring buildInfo task for project ${project.path}: is root? ${isRoot}")
+            inputsTask = createHashingInputsTask(project)
+            inputsTask.setGroup(PUBLISH_TASK_GROUP)
+        }
+        inputsTask
+    }
+
 }
 
